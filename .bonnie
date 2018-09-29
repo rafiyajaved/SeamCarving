@@ -1,0 +1,9 @@
+{
+  "course_id": "cs6475",
+  "quizzes": {
+    "report": {
+      "size": 30,
+      "quiz_id": "research_report"
+    }
+  }
+}
