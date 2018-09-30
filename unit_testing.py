@@ -24,13 +24,24 @@ energy = sc.calculate_energy(image)
 
 print(energy.shape)
 
+energy = energy[0:10, 0:20]
+
+
 plt.imshow(energy, cmap="gray")
 
-energy = np.array([[0, 0, 0], [1, 1, 1], [2, 3, 4]])
+cost_matrix = sc.compute_cost_matrix(energy)
 
-cost_matrix = sc.find_seams(energy)
+print("final",cost_matrix)
 
-print(cost_matrix)
+seam = sc.find_minimum_seam(cost_matrix)
+
+print("seam", seam)
+
+for point in seam:
+    energy[point[0], point[1]] = 255
+
+plt.imshow(energy, cmap="gray")
+
 
 
 

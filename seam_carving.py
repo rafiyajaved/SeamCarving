@@ -62,7 +62,7 @@ def calculate_energy(image, kernel=energy_kernel()):
 
     return energy
 
-def find_seams(energy_matrix, count=1):
+def compute_cost_matrix(energy_matrix):
     """
     
     1. Accumulated cost matrix : 
@@ -82,38 +82,51 @@ def find_seams(energy_matrix, count=1):
     
     """
     
-    #Step 1: Create Cost Matrix
-    
+    #Step 1: Create Accumulated Cost Matrix
     cost_matrix = energy_matrix #initialize cost_matrix to just be the energy matrix 
-    
     #then we dynamically update the values
-    
     m = cost_matrix.shape[0]-1
     n = cost_matrix.shape[1]-1
-    
-    for i in range(m+1):
-        cost_matrix[i, 0] = calculate_cost(i, 0, cost_matrix, m, n)
-    
-    
-    
-    #Step 2: Find minimum seam
-    
-
+    for k in range(n+1):
+        print(k)
+        cost_matrix[0, k] = calculate_cost(0, k, cost_matrix, m, n)
+        
     return cost_matrix
 
 def calculate_cost(i, j, array_ref, m, n):
     
-    print(array_ref)
+    
         
-    if (i>m or i<0): #if passing one of the side edges, return some very large value
+    if (j>n or j<0): #if passing one of the side edges, return some very large value
         return 100000
-    elif (j==n):     #if reached the bottom row, just return original energy fxn
+    elif (i==m):     #if reached the bottom row, just return original energy fxn
         return array_ref[i,j]
     else:
-        return array_ref[i,j]+np.min([calculate_cost(i, j+1, array_ref, m, n), #moving straight down 
-                             calculate_cost(i+1, j+1, array_ref, m, n), #moving down and to the left 
-                             calculate_cost(i-1, j+1, array_ref, m, n) #moving down and to the right 
+        return array_ref[i,j]+np.min([calculate_cost(i+1, j, array_ref, m, n), #moving straight down 
+                             calculate_cost(i+1, j-1, array_ref, m, n), #moving down and to the left 
+                             calculate_cost(i+1, j+1, array_ref, m, n) #moving down and to the right 
                              ])
+
+def find_minimum_seam(cost_matrix, count=1):
+    
+    columns = cost_matrix.shape[1]-1
+    rows = cost_matrix.shape[0]-1
+    seam = []
+    best_column = np.argmin(cost_matrix[rows, :])
+    for w in range(-rows, 1):
+        minimum = cost_matrix[-w, best_column]
+        if best_column+1<=columns and cost_matrix[-w, best_column+1]<minimum:
+            minimum = cost_matrix[-w,best_column+1]
+            best_column = best_column+1
+        if best_column-1>=0 and cost_matrix[-w, best_column-1]<minimum:
+            minimum = cost_matrix[-w, best_column-1]
+            best_column = best_column-1
+        
+        print(best_column)
+        
+        seam.append([-w, best_column])
+     
+    return seam
     
 
 def remove_seam(image, seam):
