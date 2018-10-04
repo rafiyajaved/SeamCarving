@@ -16,32 +16,61 @@ import seam_carving as sc
 
 
 
-img = cv2.imread("sample_image.png", cv2.IMREAD_COLOR)
+### img = cv2.imread("sample_image.png", cv2.IMREAD_COLOR)
 
-image = np.atleast_3d(img).astype(np.float)
-
-energy = sc.calculate_energy(image)
-
-print(energy.shape)
-
-energy = energy[0:10, 0:20]
+###image = np.atleast_3d(img).astype(np.float)
 
 
-plt.imshow(energy, cmap="gray")
+#energy = sc.calculate_energy(image)
 
-cost_matrix = sc.compute_cost_matrix(energy)
+#plt.imshow(energy, cmap="gray")
 
-print("final",cost_matrix)
+#cost_matrix = sc.compute_cost_matrix(energy)
+
+#seam = sc.find_minimum_vertical_seam(cost_matrix)
+#seam2 = sc.find_minimum_horizontal_seam(cost_matrix)
+
+"""
+for point in seam:
+        if(point[0]>=img.shape[0] or point[1]>=img.shape[1]):
+            pass
+        else:
+            img[point[0], point[1], 0] = np.max(img)
+
+for point in seam2:
+        if(point[0]>=img.shape[0] or point[1]>=img.shape[1]):
+            pass
+        else:
+            img[point[0], point[1], 0] = np.max(img)
+
+plt.imshow(img)
+
+"""
+#print(image.shape)
+
+#for seam in seams:
+#    for point in seam:
+#        if(point[0]>=img.shape[0] or point[1]>=img.shape[1]):
+#            pass
+#        else:
+#            img[point[0], point[1], 0] = np.max(img)
+
+#plt.imshow(img)
+
+energy_matrix = np.array([[1,2,3,4], [2, 1, 8,2], [2, 9, 6, 1]])
+print(energy_matrix)
+
+cost_matrix = sc.compute_cost_matrix(energy_matrix)
 
 seam = sc.find_minimum_seam(cost_matrix)
-
-print("seam", seam)
-
 for point in seam:
-    energy[point[0], point[1]] = 255
+        print("point",energy_matrix[point[0], point[1]])
+print(seam)
+print(cost_matrix)
+print(energy_matrix)
 
-plt.imshow(energy, cmap="gray")
 
+#E = sc.calculate_E(cost_matrix, 1, 1)
 
 
 
